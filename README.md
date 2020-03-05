@@ -2,22 +2,25 @@
 Performance test for ipsec offload
 
 Syntax:
-SETUP
-[root@local_machine]# ./transport_perf.sh <num of IPsec tunnel> <remote machine> <IPsec option>
-  IPsec option:
-    none: no IPsec offload on both sides
-    local: IPsec inline offload on local
-    both: IPsec inline offload on both side
+To setup
+[root@sw-mtx-011 ipsec_perf]# ./transport_perf.sh <number of tunnels> <iperf server system> <mode> local_netdev remote_netdev
+	mode:   none: no offload on both side
+		local: offload on iperf client side
+		both: offload on both side
+For example:
+[root@sw-mtx-011 ipsec_perf]# ./transport_perf.sh 250 sw-mtx-012 none ens1f0 ens1f0
+this set 250 IPsec tunnel in transport mode and offload mode on sw-mtx-011 and sw-mtx-012
 
-RUN IPERF TEST
-./remote_iperf.sh <num of IPsec tunnel>
-./local_iperf.sh <num of IPsec tunnel>
- 
-Check CPU usage during htop. Offload should not occupy much CPU power.
+To run the test
+[root@sw-mtx-012 ~]# ./remote_iperf.sh 250
+[root@sw-mtx-011 ipsec_perf]# ./local_iperf.sh 250 > temp.txt
 
-Example:
-[root@sw-mtx-011 ipsec3]# ./transport_perf.sh 10 sw-mtx-012 both
-This command runs on local machine sw-mtx-012 and creates 10 IPsec tunnel in transport mode with its remote machine is sw-mtx-011 and both sides have IPsec offload.
+To sum the bw
+[root@sw-mtx-011 ipsec_perf]# grep "30.00-35.00" temp.txt > temp1.txt && python sum.py
 
-[root@sw-mtx-012 ipsec3]# ./remote_iperf.sh 10
-[root@sw-mtx-011 ipsec3]# ./local_iperf.sh 10
+=========== For UDP ============
+Add option "-u -b 0" to the iperf command in the local_iperf.sh
+Lower MTU to 300 for little bit better pps
+
+To count the pps
+[root@sw-mtx-011 ipsec_perf]# ./print_pps.sh
