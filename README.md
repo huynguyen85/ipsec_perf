@@ -24,3 +24,11 @@ Lower MTU to 300 for little bit better pps
 
 To count the pps
 [root@sw-mtx-011 ipsec_perf]# ./print_pps.sh
+
+Dual Port test
+[root@gen-l-vrt-203 ipsec_perf]# ./transport_perf_dual.sh 24 gen-l-vrt-204 both enp4s0f0np0 enp4s0f0np0 168 enp4s0f1np1 enp4s0f1np1 169
+
+[root@gen-l-vrt-204 ipsec_perf]# ./remote_iperf_dual.sh 24
+[root@gen-l-vrt-203 ipsec_perf]# grep "10.00-15.00" temp.txt > temp1.txt
+[root@gen-l-vrt-203 ipsec_perf]# python sum.py
+87.6776
