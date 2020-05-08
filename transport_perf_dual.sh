@@ -1,0 +1,23 @@
+#!/bin/bash
+set -x #echo on
+
+REMOTE_SERVER=$2
+NUM_TUN=$1
+OPTION=$3
+LOCAL_NIC_PF=$4
+REMOTE_NIC_PF=$5
+SECOND_OCTET=$6
+LOCAL_NIC_PF2=$7
+REMOTE_NIC_PF2=$8
+SECOND_OCTET2=$9
+
+ip x s f
+ip x p f
+
+ssh $REMOTE_SERVER /bin/bash << EOF
+	ip x s f
+	ip x p f
+EOF
+
+./transport_perf_noclear.sh $NUM_TUN $REMOTE_SERVER $OPTION $LOCAL_NIC_PF $REMOTE_NIC_PF $SECOND_OCTET
+./transport_perf_noclear.sh $NUM_TUN $REMOTE_SERVER $OPTION $LOCAL_NIC_PF2 $REMOTE_NIC_PF2 $SECOND_OCTET2
