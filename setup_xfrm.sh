@@ -22,12 +22,14 @@ GCMSIZE=128
 
 OFFLOAD=1
 VERBOSE=0
+FULL=0
 
 while true ; do
 	case "$1" in
 		-none)  OFFLOAD=0; shift;;
 		-local) OFFLOAD=1; shift;;
 		-both) OFFLOAD=2; shift;;
+		-full) FULL=1; shift;;
 		-a)    FLUSH=0;   shift;;
 		-256)  SIZE=256;  shift;;
 		-id)   shift
@@ -79,18 +81,33 @@ else
 	KEY_OUT=0x`dd if=/dev/urandom count=36 bs=1 2> /dev/null| /usr/bin/xxd -p -c 72`
 fi
 
+echo $FULL
+echo $OFFLOAD
+
 OFFLOAD_OUT=
 OFFLOAD_IN=
 OFFLOAD_OUT_REMOTE=
 OFFLOAD_IN_REMOTE=
-if [ $OFFLOAD == 2 ]; then
-	OFFLOAD_OUT="offload dev $IFNAME dir out"
-	OFFLOAD_IN="offload dev $IFNAME dir in"
-	OFFLOAD_OUT_REMOTE="offload dev $REMOTE_IFNAME dir out"
-	OFFLOAD_IN_REMOTE="offload dev $REMOTE_IFNAME dir in"
-elif [ $OFFLOAD == 1 ]; then
-	OFFLOAD_OUT="offload dev $IFNAME dir out"
-	OFFLOAD_IN="offload dev $IFNAME dir in"
+if [ $FULL == 0 ]; then
+	if [ $OFFLOAD == 2 ]; then
+		OFFLOAD_OUT="offload dev $IFNAME dir out"
+		OFFLOAD_IN="offload dev $IFNAME dir in"
+		OFFLOAD_OUT_REMOTE="offload dev $REMOTE_IFNAME dir out"
+		OFFLOAD_IN_REMOTE="offload dev $REMOTE_IFNAME dir in"
+	elif [ $OFFLOAD == 1 ]; then
+		OFFLOAD_OUT="offload dev $IFNAME dir out"
+		OFFLOAD_IN="offload dev $IFNAME dir in"
+	fi
+elif [ $FULL == 1 ]; then
+	if [ $OFFLOAD == 2 ]; then
+		OFFLOAD_OUT="full_offload dev $IFNAME dir out"
+		OFFLOAD_IN="full_offload dev $IFNAME dir in"
+		OFFLOAD_OUT_REMOTE="full_offload dev $REMOTE_IFNAME dir out"
+		OFFLOAD_IN_REMOTE="full_offload dev $REMOTE_IFNAME dir in"
+	elif [ $OFFLOAD == 1 ]; then
+		OFFLOAD_OUT="full_offload dev $IFNAME dir out"
+		OFFLOAD_IN="full_offload dev $IFNAME dir in"
+	fi
 fi
 
 [ $VERBOSE == 1 ] && set -x
