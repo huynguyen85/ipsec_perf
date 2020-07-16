@@ -30,6 +30,7 @@ while true ; do
 		-local) OFFLOAD=1; shift;;
 		-both) OFFLOAD=2; shift;;
 		-full) FULL=1; shift;;
+		-inline) FULL=0; shift;;
 		-a)    FLUSH=0;   shift;;
 		-256)  SIZE=256;  shift;;
 		-id)   shift
