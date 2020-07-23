@@ -17,7 +17,7 @@ systemctl stop NetworkManager
 systemctl stop firewalld
 ip xfrm s f
 ip xfrm p f
-ip addr flush dev $LOCAL_NIC_PF
+#ip addr flush dev $LOCAL_NIC_PF
 set_irq_affinity.sh $LOCAL_NIC_PF
 ip link set $LOCAL_NIC_PF up
 
@@ -29,7 +29,7 @@ ssh $REMOTE_SERVER /bin/bash << EOF
 	systemctl stop firewalld
 	ip xfrm s f
 	ip xfrm p f
-	ip addr flush dev $REMOTE_NIC_PF
+#	ip addr flush dev $REMOTE_NIC_PF
 	set_irq_affinity.sh $REMOTE_NIC_PF
 	ip link set $REMOTE_NIC_PF up
 EOF

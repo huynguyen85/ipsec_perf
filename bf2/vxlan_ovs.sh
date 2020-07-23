@@ -6,7 +6,7 @@ PF0=p0
 VF0_REP=pf0hpf
 OUTER_REMOTE_IP=192.168.1.65
 OUTER_LOCAL_IP=192.168.1.64
-REMOTE_SERVER=bu-lab33v-bf2
+REMOTE_SERVER=$1
 
 #configuring PF and PF representor
 ifconfig $PF0 $OUTER_LOCAL_IP/24 up
