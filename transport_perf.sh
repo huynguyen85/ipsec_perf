@@ -20,7 +20,7 @@ ip xfrm p f
 set_irq_affinity.sh $LOCAL_NIC_PF
 ip link set $LOCAL_NIC_PF up
 
-ssh $REMOTE_SERVER /bin/bash << EOF
+sshpass -p 3tango ssh -o StrictHostKeyChecking=no -l root $REMOTE_SERVER /bin/bash << EOF
 	set -x #echo on
 	pkill irqbalance
 	pkill tuned
@@ -39,7 +39,7 @@ REMOTE_ADDR=192.168.$i.65
 
 ip addr add $LOCAL_ADDR/24 dev $LOCAL_NIC_PF
 
-ssh $REMOTE_SERVER /bin/bash << EOF
+sshpass -p 3tango ssh -o StrictHostKeyChecking=no -l root $REMOTE_SERVER /bin/bash << EOF
 	set -x #echo on
 	ip addr add $REMOTE_ADDR/24 dev $REMOTE_NIC_PF
 EOF
