@@ -10,6 +10,8 @@ OPTION=$4
 LOCAL_NIC_PF=$5
 REMOTE_NIC_PF=$6
 FULL=$3
+SOFT=$7
+HARD=$8
 
 pkill irqbalance
 pkill tuned
@@ -36,14 +38,10 @@ for i in $(seq 1 $NUM_TUN)
 do
 LOCAL_ADDR=192.168.$i.64
 REMOTE_ADDR=192.168.$i.65
+#LOCAL_ADDR=15.15.15.11
+#REMOTE_ADDR=15.15.15.12
 
-ip addr add $LOCAL_ADDR/24 dev $LOCAL_NIC_PF
-
-sshpass -p 3tango ssh -o StrictHostKeyChecking=no -l root $REMOTE_SERVER /bin/bash << EOF
-	set -x #echo on
-	ip addr add $REMOTE_ADDR/24 dev $REMOTE_NIC_PF
-EOF
 #./setup_xfrm.sh -$OPTION -id ${REMOTE_SPI_RX[$(($i-1))]} ${LOCAL_SPI_RX[$(($i-1))]} -a -256 -v $LOCAL_ADDR/24 $LOCAL_NIC_PF $REMOTE_ADDR/24 $REMOTE_NIC_PF $REMOTE_SERVER $LOCAL_ADDR $REMOTE_ADDR
-./setup_xfrm.sh -$FULL -$OPTION -a -256 -v $LOCAL_ADDR/24 $LOCAL_NIC_PF $REMOTE_ADDR/24 $REMOTE_NIC_PF $REMOTE_SERVER $LOCAL_ADDR $REMOTE_ADDR
+./setup_xfrm.sh -$FULL -$OPTION -a -256 -v $LOCAL_ADDR/24 $LOCAL_NIC_PF $REMOTE_ADDR/24 $REMOTE_NIC_PF $REMOTE_SERVER $LOCAL_ADDR $REMOTE_ADDR $SOFT $HARD
 done
 

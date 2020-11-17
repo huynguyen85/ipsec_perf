@@ -54,6 +54,8 @@ REMOTE="$1"; shift
 # Optional arguments
 LOCALNET="${1-$SRC}"; shift || true
 REMOTENET="${1-$DST}"; shift || true
+SOFT="$1"; shift
+HARD="$1"; shift
 
 if (( $OFFLOAD >= 1 )) && \
    ! ip xfrm st help 2>&1 | grep -q offload; then
@@ -100,8 +102,9 @@ elif [ $FULL == 1 ]; then
 		OFFLOAD_OUT_REMOTE="full_offload dev $REMOTE_IFNAME dir out"
 		OFFLOAD_IN_REMOTE="full_offload dev $REMOTE_IFNAME dir in"
 	elif [ $OFFLOAD == 1 ]; then
-		OFFLOAD_OUT="full_offload dev $IFNAME dir out"
-		OFFLOAD_IN="full_offload dev $IFNAME dir in"
+		OFFLOAD_OUT="flag esn replay-window 32 full_offload dev $IFNAME dir out"
+#		OFFLOAD_IN="full_offload dev $IFNAME dir in"
+		OFFLOAD_IN="full_offload dev $IFNAME dir in limit packet-soft $SOFT limit packet-hard $HARD"
 	fi
 fi
 
